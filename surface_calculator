@@ -1,0 +1,96 @@
+import psycopg2
+import sys
+import math
+import jedi
+
+conn_string = psycopg2.connect("host='localhost' dbname='test' user='davide' password='postgresql'")
+
+def string_cleaning(x):    
+    return (x.replace(" ", "").upper())
+
+def checkinput (userinput):
+    try:
+        result=float(userinput)
+        if result==0:
+            print("The side cannot be 0")
+            return False
+        else:
+            return result
+    except ValueError:
+        print("This is not a number, please try again!")
+        return False
+        
+    
+def square_surface(x):
+        return x*x
+    
+def triangle_surface(x,y,z):
+    a = ((x+y+z)/2*(((x+y+z)/2)-x)*(((x+y+z)/2)-y)*(((x+y+z)/2)-z))
+    try:
+        return math.sqrt(((x+y+z)/2*(((x+y+z)/2)-x)*(((x+y+z)/2)-y)*(((x+y+z)/2)-z)))
+    except ValueError:
+        print ("This triangle does not exist! Please try again!")
+        return 0
+        
+def rectangle_surface(x,y):
+    return x*y
+
+while True:
+    object=input("What is the object? ")
+    object=string_cleaning(object)
+
+    if (object=="TRIANGLE"):
+        while True:
+            a=input("What is the first side? ")
+            a=checkinput(a)
+            if a is False:  continue
+            break
+        while True:          
+            b=input("What is the second side? ")
+            b=checkinput(b)
+            if  b is False: continue
+            break
+        while True:
+            c=input("What is the third side? ")
+            c=checkinput(c)
+            if c is False: continue
+            break
+        
+        s= triangle_surface(a,b,c)
+           
+        print("The surface of the triangle is:", round(s,2), "cm2")
+    
+    elif (object=="SQUARE"):
+        while True:
+            a=input("What is the side of the square ? ")
+            a=checkinput(a)
+            if a is False: continue
+            break            
+        s= square_surface(a)
+        print ("The surface of the square is: ", round(s,2),"cm2")
+    elif (object=="RECTANGLE"):
+        while True:
+            a=input("What is the first side of the rectangle? ")
+            a=checkinput(a)
+            if a is False:continue
+            break
+        while True:
+            b=input("What is the second side of the rectangle? ")
+            b=checkinput(b)
+            if b is False:continue
+            break
+        s= rectangle_surface(a,b)
+        print("The surface of the rectangle is: ", round(s,2), "cm2")
+    else:
+        print("The object does not exist! You can choose between square, rectangle or triangle")
+        continue
+    break
+    
+cur = conn_string.cursor()
+cur.execute("""INSERT INTO surface (object_type, surface) values ('%s', %d)""" %(object,s) )
+conn_string.commit()
+cur.execute("""SELECT object_type, surface FROM surface""")
+
+
+result=cur.fetchall()
+print(result)
