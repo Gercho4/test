@@ -3,7 +3,6 @@ import sys
 
 math_oper=input("What mathematical operation you want to use? ")
 
-:start
 if (math_oper=="addition" or math_oper=="substraction" or math_oper=="multiplication" or math_oper=="division" ):
     try:
         first_number=input('What is the first number? ')
@@ -11,7 +10,7 @@ if (math_oper=="addition" or math_oper=="substraction" or math_oper=="multiplica
     
     except ValueError:
             print("This is not a number")
-            go to start
+           
     try:
         second_number=input('What is the second number? ')
         second_number=int(second_number)
