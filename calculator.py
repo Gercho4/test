@@ -1,5 +1,13 @@
 import sys
 
+try:
+  import googleclouddebugger
+  googleclouddebugger.enable()
+
+except ImportError:
+  pass
+
+
 
 math_oper=input("What mathematical operation you want to use? ")
 
@@ -7,7 +15,7 @@ if (math_oper=="addition" or math_oper=="substraction" or math_oper=="multiplica
     try:
         first_number=input('What is the first number? ')
         first_number=int(first_number)
-    
+
     except ValueError:
             print("This is not a number")
            
